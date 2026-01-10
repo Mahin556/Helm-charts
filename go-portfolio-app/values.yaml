@@ -1,0 +1,24 @@
+appname: go-portfolio
+namespace: go-portfolio-namespace
+replicaCount: 3
+
+labels:
+  role: go-portfolio
+  env: dev
+
+image:
+  pullPolicy: IfNotPresent
+  repository: avian19/go-port
+  tag: "10201891038"
+
+containers:
+  name: go-portfolio
+  ports:
+    - port: 8080
+      targetPort: 8080
+  requests:
+    memory: "256Mi"
+    cpu: "500m"
+  limits:
+    memory: "512Mi"
+    cpu: "1"
