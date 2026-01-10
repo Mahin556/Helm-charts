@@ -3,7 +3,7 @@ entries:
   go-portfolio-app:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-10T08:59:58.445408437Z"
+    created: "2026-01-10T10:06:38.74411093Z"
     description: A Helm chart for Kubernetes
     digest: 694b06afe63e11b3c839bf13101ee6d1c02df6a942dbf1f95a1dcb0a1522a782
     name: go-portfolio-app
@@ -11,4 +11,15 @@ entries:
     urls:
     - go-portfolio-app-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-10T08:59:58.444971208Z"
+  tetris-game:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-01-10T10:06:38.744790931Z"
+    description: A Helm chart for Kubernetes
+    digest: db5f0f442a1eeab398e4d733ff0fd3f480f1f500d519327fcc82b13546b239a5
+    name: tetris-game
+    type: application
+    urls:
+    - tetris-game-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-01-10T10:06:38.743538207Z"
