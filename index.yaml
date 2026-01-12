@@ -3,7 +3,17 @@ entries:
   cymbal_ecommerce:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-12T21:08:32.6879684+05:30"
+    created: "2026-01-12T21:31:02.8508105+05:30"
+    description: cymbal_ecommerce application with 11 microservices
+    digest: c92ddac696df464d3773ab0e6b10f616a7da6cab38a9e42a6757fed51e9dffd6
+    name: cymbal_ecommerce
+    type: application
+    urls:
+    - cymbal_ecommerce-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-01-12T21:31:02.8475783+05:30"
     description: cymbal_ecommerce application with 11 microservices
     digest: c0bb30b10245321ac5c5520e62a08d67880dd94ba6ccdcaee33335959463cc0e
     name: cymbal_ecommerce
@@ -13,7 +23,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-12T21:08:32.6835355+05:30"
+    created: "2026-01-12T21:31:02.8203393+05:30"
     description: cymbal_ecommerce application with 11 microservices
     digest: abb256e5c0e043908d2108d83aba82dd108d60b56bf69d0746ac9b4c3b10424c
     name: cymbal_ecommerce
@@ -24,7 +34,7 @@ entries:
   go-portfolio-app:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-12T21:08:32.6969848+05:30"
+    created: "2026-01-12T21:31:02.8827776+05:30"
     description: A Helm chart for Kubernetes
     digest: 694b06afe63e11b3c839bf13101ee6d1c02df6a942dbf1f95a1dcb0a1522a782
     name: go-portfolio-app
@@ -35,7 +45,7 @@ entries:
   tetris-game:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-12T21:08:32.702396+05:30"
+    created: "2026-01-12T21:31:02.8870441+05:30"
     description: A Helm chart for Kubernetes
     digest: db5f0f442a1eeab398e4d733ff0fd3f480f1f500d519327fcc82b13546b239a5
     name: tetris-game
@@ -43,4 +53,4 @@ entries:
     urls:
     - tetris-game-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-12T21:08:32.6321328+05:30"
+generated: "2026-01-12T21:31:02.791542+05:30"
