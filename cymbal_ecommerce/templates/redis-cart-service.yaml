@@ -6,10 +6,8 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Values.app_name }}
-    service: {{ .Values.redis_cart.name }}
-    environment: {{ .Values.environment }}
-    release: {{ .Release.Name }}
+    {{- include "common_labels" . | nindent 4 }}
+    {{- include "redis_cart_labels" . | nindent 4 }}
   ports:
   - name: tcp-redis
     port: {{ .Values.redis_cart.service.port }}

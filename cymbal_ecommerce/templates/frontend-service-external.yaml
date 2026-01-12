@@ -6,10 +6,8 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: {{ .Values.app_name }}
-    service: {{ .Values.frontend.name }}
-    environment: {{ .Values.environment }}
-    release: {{ .Release.Name }}
+    {{- include "common_labels" . | nindent 4 }}
+    {{- include "frontend_labels" . | nindent 4 }}
   ports:
   - name: http
     port: {{ .Values.frontend.external_service.port }}

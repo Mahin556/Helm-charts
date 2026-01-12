@@ -7,17 +7,13 @@ spec:
   replicas: {{ .Values.shippingservice.pod.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.app_name }}
-      service: {{ .Values.shippingservice.name }}
-      environment: {{ .Values.environment }}
-      release: {{ .Release.Name }}
+      {{- include "common_labels" . | nindent 6 }}
+      {{- include "shippingservice_labels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app_name }}
-        service: {{ .Values.shippingservice.name }}
-        environment: {{ .Values.environment }}
-        release: {{ .Release.Name }}
+        {{- include "common_labels" . | nindent 8 }}
+        {{- include "shippingservice_labels" . | nindent 8 }}
     spec:
       serviceAccountName: default
       securityContext:

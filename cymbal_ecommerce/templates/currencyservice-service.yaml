@@ -6,10 +6,8 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Values.app_name }}
-    service: {{ .Values.currencyservice.name }}
-    environment: {{ .Values.environment }}
-    release: {{ .Release.Name }}
+    {{- include "common_labels" . | nindent 4 }}
+    {{- include "currencyservice_labels" . | nindent 4 }}
   ports:
   - name: grpc
     port: {{ .Values.currencyservice.service.port }}

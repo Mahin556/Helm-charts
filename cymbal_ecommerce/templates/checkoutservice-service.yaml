@@ -6,10 +6,8 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Values.app_name }}
-    service: {{ .Values.checkoutservice.name }}
-    environment: {{ .Values.environment }}
-    release: {{ .Release.Name }}
+    {{- include "common_labels" . | nindent 4 }}
+    {{- include "checkoutservice_labels" . | nindent 4 }}
   ports:
   - name: grpc
     port: {{ .Values.checkoutservice.service.port }}

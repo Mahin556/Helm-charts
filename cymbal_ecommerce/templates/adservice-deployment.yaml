@@ -7,17 +7,13 @@ spec:
   replicas: {{ .Values.adservice.pod.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.app_name }}
-      service: {{ .Values.adservice.name }}
-      environment: {{ .Values.environment }}
-      release: {{ .Release.Name }}
+      {{- include "common_labels" . | nindent 6 }}
+      {{- include "adservice_labels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app_name }}
-        service: {{ .Values.adservice.name }}
-        environment: {{ .Values.environment }}
-        release: {{ .Release.Name }}
+        {{- include "common_labels" . | nindent 8 }}
+        {{- include "adservice_labels" . | nindent 8 }}
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
