@@ -31,20 +31,21 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.productcatalogservice.container.image.name }}:{{ .Values.productcatalogservice.container.image.tag }}"
+        {{- with .Values.productcatalogservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.productcatalogservice.container.port }}
+        - containerPort: {{ .port }}
         env:
         - name: PORT
-          value: "{{ .Values.productcatalogservice.container.port }}"
+          value: "{{ .port }}"
         - name: DISABLE_PROFILER
-          value: "{{ .Values.productcatalogservice.container.disable_profiler }}"
+          value: "{{ .disable_profiler }}"
         readinessProbe:
           grpc:
-            port: {{ .Values.productcatalogservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           grpc:
-            port: {{ .Values.productcatalogservice.container.port }}
+            port: {{ .port }}
         resources:
           requests:
             cpu: 100m
@@ -52,3 +53,4 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+        {{- end}}

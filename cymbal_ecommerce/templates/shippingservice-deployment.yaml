@@ -30,21 +30,22 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.shippingservice.container.image.name }}:{{ .Values.shippingservice.container.image.tag }}"
+        {{- with .Values.shippingservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.shippingservice.container.port }}
+        - containerPort: {{ .port }}
         env:
         - name: PORT
-          value: "{{ .Values.shippingservice.container.port }}"
+          value: "{{ .port }}"
         - name: DISABLE_PROFILER
-          value: "{{ .Values.shippingservice.container.disable_profiler }}"
+          value: "{{ .disable_profiler }}"
         readinessProbe:
           periodSeconds: 5
           grpc:
-            port: {{ .Values.shippingservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           grpc:
-            port: {{ .Values.shippingservice.container.port }}
+            port: {{ .port }}
         resources:
           requests:
             cpu: 100m
@@ -52,3 +53,4 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+        {{- end}}

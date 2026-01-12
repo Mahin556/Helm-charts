@@ -31,21 +31,22 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.currencyservice.container.image.name }}:{{ .Values.currencyservice.container.image.tag }}"
+        {{- with .Values.currencyservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
         - name: grpc
-          containerPort: {{ .Values.currencyservice.container.port }}
+          containerPort: {{ .port }}
         env:
         - name: PORT
-          value: "{{ .Values.currencyservice.container.port }}"
+          value: "{{ .port }}"
         - name: DISABLE_PROFILER
-          value: "{{ .Values.currencyservice.container.disable_profiler }}"
+          value: "{{ .disable_profiler }}"
         readinessProbe:
           grpc:
-            port: {{ .Values.currencyservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           grpc:
-            port: {{ .Values.currencyservice.container.port }}
+            port: {{ .port }}
         resources:
           requests:
             cpu: 100m
@@ -53,3 +54,4 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+        {{- end}}

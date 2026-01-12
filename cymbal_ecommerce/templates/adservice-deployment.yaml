@@ -31,12 +31,13 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.adservice.container.image.name }}:{{ .Values.adservice.container.image.tag }}"
+        {{- with .Values.adservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.adservice.container.port }}
+        - containerPort: {{ .port }}
         env:
         - name: PORT
-          value: "{{ .Values.adservice.container.port }}"
+          value: "{{ .port }}"
         resources:
           requests:
             cpu: 200m
@@ -48,9 +49,10 @@ spec:
           initialDelaySeconds: 20
           periodSeconds: 15
           grpc:
-            port: {{ .Values.adservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           initialDelaySeconds: 20
           periodSeconds: 15
           grpc:
-            port: {{ .Values.adservice.container.port }}
+            port: {{ .port }}
+        {{- end}}

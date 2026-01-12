@@ -31,22 +31,23 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.emailservice.container.image.name }}:{{ .Values.emailservice.container.image.tag }}"
+        {{- with .Values.emailservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.emailservice.container.port }}
+        - containerPort: {{ .port }}
         env:
         - name: PORT
-          value: "{{ .Values.emailservice.container.port }}"
+          value: "{{ .port }}"
         - name: DISABLE_PROFILER
-          value: "{{ .Values.emailservice.container.disable_profiler }}"
+          value: "{{ .disable_profiler }}"
         readinessProbe:
           periodSeconds: 5
           grpc:
-            port: {{ .Values.emailservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           periodSeconds: 5
           grpc:
-            port: {{ .Values.emailservice.container.port }}
+            port: {{ .port }}
         resources:
           requests:
             cpu: 100m
@@ -54,3 +55,4 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+        {{- end}}

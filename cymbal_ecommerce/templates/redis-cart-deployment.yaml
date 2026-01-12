@@ -30,17 +30,18 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.redis_cart.container.image.name }}:{{ .Values.redis_cart.container.image.tag }}"
+        {{- with .Values.redis_cart.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.redis_cart.container.port }}
+        - containerPort: {{ .port }}
         readinessProbe:
           periodSeconds: 5
           tcpSocket:
-            port: {{ .Values.redis_cart.container.port }}
+            port: {{ .port }}
         livenessProbe:
           periodSeconds: 5
           tcpSocket:
-            port: {{ .Values.redis_cart.container.port }}
+            port: {{ .port }}
         volumeMounts:
         - mountPath: /data
           name: redis-data
@@ -54,3 +55,4 @@ spec:
       volumes:
       - name: redis-data
         emptyDir: {}
+        {{- end}}

@@ -31,20 +31,21 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.paymentservice.container.image.name }}:{{ .Values.paymentservice.container.image.tag }}"
+        {{- with .Values.paymentservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.paymentservice.container.port }}
+        - containerPort: {{ .port }}
         env:
         - name: PORT
-          value: "{{ .Values.paymentservice.container.port }}"
+          value: "{{ .port }}"
         - name: DISABLE_PROFILER
-          value: "{{ .Values.paymentservice.container.disable_profiler }}"
+          value: "{{ .disable_profiler }}"
         readinessProbe:
           grpc:
-            port: {{ .Values.paymentservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           grpc:
-            port: {{ .Values.paymentservice.container.port }}
+            port: {{ .port }}
         resources:
           requests:
             cpu: 100m
@@ -52,3 +53,4 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+        {{- end}}

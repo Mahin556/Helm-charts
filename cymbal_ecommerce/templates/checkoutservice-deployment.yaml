@@ -30,30 +30,31 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: "{{ .Values.checkoutservice.container.image.name }}:{{ .Values.checkoutservice.container.image.tag }}"
+          {{- with .Values.checkoutservice.container}}
+          image: "{{ .image.name }}:{{ .image.tag }}"
           ports:
-          - containerPort: {{ .Values.checkoutservice.container.port }}
+          - containerPort: {{ .port }}
           readinessProbe:
             grpc:
-              port: {{ .Values.checkoutservice.container.port }}
+              port: {{ .port }}
           livenessProbe:
             grpc:
-              port: {{ .Values.checkoutservice.container.port }}
+              port: {{ .port }}
           env:
           - name: PORT
-            value: "{{ .Values.checkoutservice.container.port }}"
+            value: "{{ .port }}"
           - name: PRODUCT_CATALOG_SERVICE_ADDR
-            value: "{{ .Release.Name }}-{{ .Values.productcatalogservice.name }}-service:{{ .Values.productcatalogservice.service.port }}"
+            value: "{{ $.Release.Name }}-{{ $.Values.productcatalogservice.name }}-service:{{ $.Values.productcatalogservice.service.port }}"
           - name: SHIPPING_SERVICE_ADDR
-            value: "{{ .Release.Name }}-{{ .Values.shippingservice.name }}-service:{{ .Values.shippingservice.service.port }}"
+            value: "{{ $.Release.Name }}-{{ $.Values.shippingservice.name }}-service:{{ $.Values.shippingservice.service.port }}"
           - name: PAYMENT_SERVICE_ADDR
-            value: "{{ .Release.Name }}-{{ .Values.paymentservice.name }}-service:{{ .Values.paymentservice.service.port }}"
+            value: "{{ $.Release.Name }}-{{ $.Values.paymentservice.name }}-service:{{ $.Values.paymentservice.service.port }}"
           - name: EMAIL_SERVICE_ADDR
-            value: "{{ .Release.Name }}-{{ .Values.emailservice.name }}-service:{{ .Values.emailservice.service.port }}"
+            value: "{{ $.Release.Name }}-{{ $.Values.emailservice.name }}-service:{{ $.Values.emailservice.service.port }}"
           - name: CURRENCY_SERVICE_ADDR
-            value: "{{ .Release.Name }}-{{ .Values.currencyservice.name }}-service:{{ .Values.currencyservice.service.port }}"
+            value: "{{ $.Release.Name }}-{{ $.Values.currencyservice.name }}-service:{{ $.Values.currencyservice.service.port }}"
           - name: CART_SERVICE_ADDR
-            value: "{{ .Release.Name }}-{{ .Values.cartservice.name }}-service:{{ .Values.cartservice.service.port }}"
+            value: "{{ $.Release.Name }}-{{ $.Values.cartservice.name }}-service:{{ $.Values.cartservice.service.port }}"
           resources:
             requests:
               cpu: 100m
@@ -61,3 +62,4 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
+          {{- end}}

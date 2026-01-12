@@ -31,24 +31,25 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.recommendationservice.container.image.name }}:{{ .Values.recommendationservice.container.image.tag }}"
+        {{- with .Values.recommendationservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.recommendationservice.container.port }}
+        - containerPort: {{ .port }}
         readinessProbe:
           periodSeconds: 5
           grpc:
-            port: {{ .Values.recommendationservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           periodSeconds: 5
           grpc:
-            port: {{ .Values.recommendationservice.container.port }}
+            port: {{ .port }}
         env:
         - name: PORT
-          value: "{{ .Values.recommendationservice.container.port }}"
+          value: "{{ .port }}"
         - name: PRODUCT_CATALOG_SERVICE_ADDR
-          value: "{{ .Release.Name }}-{{ .Values.productcatalogservice.name }}-service:{{ .Values.productcatalogservice.service.port }}"
+          value: "{{ $.Release.Name }}-{{ $.Values.productcatalogservice.name }}-service:{{ $.Values.productcatalogservice.service.port }}"
         - name: DISABLE_PROFILER
-          value: "{{ .Values.recommendationservice.container.disable_profiler }}"
+          value: "{{ .disable_profiler }}"
         resources:
           requests:
             cpu: 100m
@@ -56,3 +57,4 @@ spec:
           limits:
             cpu: 200m
             memory: 450Mi
+        {{- end}}

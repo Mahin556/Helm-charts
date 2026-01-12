@@ -44,10 +44,11 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.loadgenerator.container.image.name }}:{{ .Values.loadgenerator.container.image.tag }}"
+        {{- with .Values.loadgenerator.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         env:
         - name: FRONTEND_ADDR
-          value: "{{ .Release.Name }}-{{ .Values.frontend.name }}-service:{{ .Values.frontend.service.port }}"
+          value: "{{ $.Release.Name }}-{{ $.Values.frontend.name }}-service:{{ $.Values.frontend.service.port }}"
       containers:
       - name: main
         securityContext:
@@ -57,7 +58,8 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.loadgenerator.container.image.name }}:{{ .Values.loadgenerator.container.image.tag }}"
+        image: "{{ .image.name }}:{{ .image.tag }}"
+        {{- end}}
         env:
         - name: FRONTEND_ADDR
           value: "{{ .Release.Name }}-{{ .Values.frontend.name }}-service:{{ .Values.frontend.service.port }}"

@@ -31,12 +31,13 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "{{ .Values.cartservice.container.image.name }}:{{ .Values.cartservice.container.image.tag }}"
+        {{- with .Values.cartservice.container}}
+        image: "{{ .image.name }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.cartservice.container.port }}
+        - containerPort: {{ .port }}
         env:
         - name: REDIS_ADDR
-          value: "{{ .Release.Name }}-{{ .Values.redis_cart.name }}-service:{{ .Values.redis_cart.service.port }}"
+          value: "{{ $.Release.Name }}-{{ $.Values.redis_cart.name }}-service:{{ $.Values.redis_cart.service.port }}"
         resources:
           requests:
             cpu: 200m
@@ -47,9 +48,10 @@ spec:
         readinessProbe:
           initialDelaySeconds: 15
           grpc:
-            port: {{ .Values.cartservice.container.port }}
+            port: {{ .port }}
         livenessProbe:
           initialDelaySeconds: 15
           periodSeconds: 10
           grpc:
-            port: {{ .Values.cartservice.container.port }}
+            port: {{ .port }}
+        {{- end}}
