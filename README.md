@@ -7,5 +7,9 @@ helm install demo mahin-repo/go-portfolio-app
 
 helm install tetris mahin-repo/tetris-game
 
-helm install cymbal_ecommerce mahin-repo/cymbal_ecommerce
+helm install demo mahin-repo/cymbal_ecommerce
+
+helm install demo mahin-repo/cymbal_ecommerce --version=0.1.3
+
+kubectl patch svc demo-frontend-external-service -n demo-cymbal-development -p '{"spec": {"type": "NodePort"}}'
 ```
