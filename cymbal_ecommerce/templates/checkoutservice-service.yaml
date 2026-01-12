@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.checkoutservice.name }}-service"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Values.app_name }}
+    service: {{ .Values.checkoutservice.name }}
+    environment: {{ .Values.environment }}
+    release: {{ .Release.Name }}
+  ports:
+  - name: grpc
+    port: {{ .Values.checkoutservice.service.port }}
+    targetPort: {{ .Values.checkoutservice.service.target_port }}

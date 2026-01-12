@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.paymentservice.name }}-deployment"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+spec:
+  replicas: {{ .Values.paymentservice.pod.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+      service: {{ .Values.paymentservice.name }}
+      environment: {{ .Values.environment }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+        service: {{ .Values.paymentservice.name }}
+        environment: {{ .Values.environment }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: "{{ .Release.Name }}-{{ .Values.paymentservice.name }}-container"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: "{{ .Values.paymentservice.container.image.name }}:{{ .Values.paymentservice.container.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.paymentservice.container.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.paymentservice.container.port }}"
+        - name: DISABLE_PROFILER
+          value: "{{ .Values.paymentservice.container.disable_profiler }}"
+        readinessProbe:
+          grpc:
+            port: {{ .Values.paymentservice.container.port }}
+        livenessProbe:
+          grpc:
+            port: {{ .Values.paymentservice.container.port }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi

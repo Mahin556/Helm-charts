@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.redis_cart.name }}-deployment"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+spec:
+  replicas: {{ .Values.redis_cart.pod.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+      service: {{ .Values.redis_cart.name }}
+      environment: {{ .Values.environment }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+        service: {{ .Values.redis_cart.name }}
+        environment: {{ .Values.environment }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: "{{ .Release.Name }}-{{ .Values.redis_cart.name }}-container"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: "{{ .Values.redis_cart.container.image.name }}:{{ .Values.redis_cart.container.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.redis_cart.container.port }}
+        readinessProbe:
+          periodSeconds: 5
+          tcpSocket:
+            port: {{ .Values.redis_cart.container.port }}
+        livenessProbe:
+          periodSeconds: 5
+          tcpSocket:
+            port: {{ .Values.redis_cart.container.port }}
+        volumeMounts:
+        - mountPath: /data
+          name: redis-data
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 125m
+          requests:
+            cpu: 70m
+            memory: 200Mi
+      volumes:
+      - name: redis-data
+        emptyDir: {}

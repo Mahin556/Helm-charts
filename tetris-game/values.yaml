@@ -1,0 +1,25 @@
+appname: tetris-game
+
+namespace: tetris-game-ns
+replicaCount: 2
+
+labels:
+  role: tetris-game
+  env: dev
+
+image:
+  pullPolicy: IfNotPresent
+  repository: avian19/tetrisv2
+  tag: "1"
+
+containers:
+  name: tetris-game
+  ports:
+    - port: 3000
+      targetPort: 3000
+  requests:
+    memory: "256Mi"
+    cpu: "500m"
+  limits:
+    memory: "512Mi"
+    cpu: "1"

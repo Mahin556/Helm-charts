@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.adservice.name }}-deployment"
+  namespace: "{{ .Release.Name }}-{{ .Values.environment }}-{{ .Values.namespace }}"
+spec:
+  replicas: {{ .Values.adservice.pod.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+      service: {{ .Values.adservice.name }}
+      environment: {{ .Values.environment }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+        service: {{ .Values.adservice.name }}
+        environment: {{ .Values.environment }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: "{{ .Values.adservice.name }}-container"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: "{{ .Values.adservice.container.image.name }}:{{ .Values.adservice.container.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.adservice.container.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.adservice.container.port }}"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 180Mi
+          limits:
+            cpu: 300m
+            memory: 300Mi
+        readinessProbe:
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          grpc:
+            port: {{ .Values.adservice.container.port }}
+        livenessProbe:
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          grpc:
+            port: {{ .Values.adservice.container.port }}
