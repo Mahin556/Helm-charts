@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.checkoutservice.name }}-deployment"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+spec:
+  replicas: {{ .Values.checkoutservice.pod.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+      service: {{ .Values.checkoutservice.name }}
+      environment: {{ .Values.environment }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+        service: {{ .Values.checkoutservice.name }}
+        environment: {{ .Values.environment }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: "{{ .Values.checkoutservice.name }}-container"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+          image: "{{ .Values.checkoutservice.container.image.name }}:{{ .Values.checkoutservice.container.image.tag }}"
+          ports:
+          - containerPort: {{ .Values.checkoutservice.container.port }}
+          readinessProbe:
+            grpc:
+              port: {{ .Values.checkoutservice.container.port }}
+          livenessProbe:
+            grpc:
+              port: {{ .Values.checkoutservice.container.port }}
+          env:
+          - name: PORT
+            value: "{{ .Values.checkoutservice.container.port }}"
+          - name: PRODUCT_CATALOG_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.productcatalogservice.name }}-service:{{ .Values.productcatalogservice.service.port }}"
+          - name: SHIPPING_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.shippingservice.name }}-service:{{ .Values.shippingservice.service.port }}"
+          - name: PAYMENT_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.paymentservice.name }}-service:{{ .Values.paymentservice.service.port }}"
+          - name: EMAIL_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.emailservice.name }}-service:{{ .Values.emailservice.service.port }}"
+          - name: CURRENCY_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.currencyservice.name }}-service:{{ .Values.currencyservice.service.port }}"
+          - name: CART_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.cartservice.name }}-service:{{ .Values.cartservice.service.port }}"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

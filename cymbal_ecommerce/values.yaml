@@ -1,0 +1,174 @@
+environment: "development"
+namespace: "cymbal"
+app_name: "cymbal"
+
+adservice:
+  name: "adservice"
+  pod:
+    replicas: 1
+  service:
+    port: 9555
+    target_port: 9555
+  container:
+    port: 9555
+    image:
+      name: mahinraza556/ecommerce
+      tag: adservice
+
+cartservice:
+  name: "cartservice"
+  pod:
+    replicas: 1
+  service:
+    port: 7070
+    target_port: 7070
+  container:
+    port: 7070
+    image:
+      name: mahinraza556/ecommerce
+      tag: cartservice
+
+redis_cart:
+  name: "redis_cart"
+  pod:
+    replicas: 1
+  service:
+    port: 6379
+    target_port: 6379
+  container:
+    port: 6379
+    image:
+      name: redis
+      tag: alpine
+
+checkoutservice:
+  name: "checkoutservice"
+  pod: 
+    replicas: 1
+  service:
+    port: 5050
+    target_port: 5050
+  container:
+    port: 5050
+    image:
+      name: mahinraza556/ecommerce
+      tag: checkoutservice
+
+currencyservice:
+  name: "currencyservice"
+  pod: 
+    replicas: 1
+  service:
+    port: 7000
+    target_port: 7000
+  container:
+    port: 7000
+    disable_profiler: "1"
+    image:
+      name: mahinraza556/ecommerce
+      tag: currencyservice
+
+emailservice:
+  name: "emailservice"
+  pod: 
+    replicas: 1
+  service:
+    port: 5000
+    target_port: 8080
+  container:
+    port: 8080
+    disable_profiler: "1"
+    image:
+      name: mahinraza556/ecommerce
+      tag: emailservice
+
+paymentservice:
+  name: "paymentservice"
+  pod: 
+    replicas: 1
+  service:
+    port: 50051
+    target_port: 50051
+  container:
+    port: 50051
+    disable_profiler: "1"
+    image:
+      name: mahinraza556/ecommerce
+      tag: paymentservice
+
+productcatalogservice:
+  name: "productcatalogservice"
+  pod: 
+    replicas: 1
+  service:
+    port: 3550
+    target_port: 3550
+  container:
+    port: 3550
+    disable_profiler: "1"
+    image:
+      name: mahinraza556/ecommerce
+      tag: productcatalogservice
+
+recommendationservice:
+  name: "recommendationservice"
+  pod: 
+    replicas: 1
+  service:
+    port: 8080
+    target_port: 8080
+  container:
+    port: 8080
+    disable_profiler: "1"
+    image:
+      name: mahinraza556/ecommerce
+      tag: recommendationservice
+
+shippingservice:
+  name: "shippingservice"
+  pod: 
+    replicas: 1
+  service:
+    port: 50051
+    target_port: 50051
+  container:
+    port: 50051
+    disable_profiler: "1"
+    image:
+      name: mahinraza556/ecommerce
+      tag: shippingservice
+
+loadgenerator:
+  name: "loadgenerator"
+  users: 10
+  pod: 
+    replicas: 1
+  service:
+    port: 50051
+    target_port: 50051
+  container:
+    port: 50051
+    disable_profiler: "1"
+    image:
+      name: mahinraza556/ecommerce
+      tag: loadgenerator
+
+frontend:
+  name: "frontend"
+  env_platform: "aws"
+  cymbal_branding: "true"
+  pod: 
+    replicas: 1
+  external_service:
+    port: 80
+    target_port: 8080
+  service:
+    port: 80
+    target_port: 8080
+  container:
+    port: 8080
+    enable_profiler: "0"
+    image:
+      name: mahinraza556/ecommerce
+      tag: frontend
+

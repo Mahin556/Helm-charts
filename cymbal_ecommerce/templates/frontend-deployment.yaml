@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.frontend.name }}-deployment"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+spec:
+  replicas: {{ .Values.frontend.pod.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+      service: {{ .Values.frontend.name }}
+      environment: {{ .Values.environment }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+        service: {{ .Values.frontend.name }}
+        environment: {{ .Values.environment }}
+        release: {{ .Release.Name }}
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      serviceAccountName: default
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: "{{ .Release.Name }}-{{ .Values.frontend.name }}-container"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+          image: "{{ .Values.frontend.container.image.name }}:{{ .Values.frontend.container.image.tag }}"
+          ports:
+          - containerPort: {{ .Values.frontend.container.port }}
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/_healthz"
+              port: {{ .Values.frontend.container.port }}
+              httpHeaders:
+              - name: "Cookie"
+                value: "shop_session-id=x-readiness-probe"
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/_healthz"
+              port: {{ .Values.frontend.container.port }}
+              httpHeaders:
+              - name: "Cookie"
+                value: "shop_session-id=x-liveness-probe"
+          env:
+          - name: PORT
+            value: "{{ .Values.frontend.container.port }}"
+          - name: PRODUCT_CATALOG_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.productcatalogservice.name }}-service:{{ .Values.productcatalogservice.service.port }}"
+          - name: CURRENCY_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.currencyservice.name }}-service:{{ .Values.currencyservice.service.port }}"
+          - name: CART_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.cartservice.name }}-service:{{ .Values.cartservice.service.port }}"
+          - name: RECOMMENDATION_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.recommendationservice.name }}-service:{{ .Values.recommendationservice.service.port }}"
+          - name: SHIPPING_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.shippingservice.name }}-service:{{ .Values.shippingservice.service.port }}"
+          - name: CHECKOUT_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.checkoutservice.name }}-service:{{ .Values.checkoutservice.service.port }}"
+          - name: AD_SERVICE_ADDR
+            value: "{{ .Release.Name }}-{{ .Values.adservice.name }}-service:{{ .Values.adservice.service.port }}"
+          # # ENV_PLATFORM: One of: local, gcp, aws, azure, onprem, alibaba
+          # # When not set, defaults to "local" unless running in GKE, otherwies auto-sets to gcp
+          - name: ENV_PLATFORM
+            value: "{{ .Values.frontend.env_platform }}"
+          - name: ENABLE_PROFILER
+            value: "{{ .Values.frontend.container.enable_profiler }}"
+          - name: CYMBAL_BRANDING
+            value: "{{ .Values.frontend.cymbal_branding }}"
+          # - name: FRONTEND_MESSAGE
+          #   value: "Replace this with a message you want to display on all pages."
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

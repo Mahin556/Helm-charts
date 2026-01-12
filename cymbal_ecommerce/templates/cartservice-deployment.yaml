@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.cartservice.name }}-deployment"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+spec:
+  replicas: {{ .Values.cartservice.pod.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+      service: {{ .Values.cartservice.name }}
+      environment: {{ .Values.environment }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+        service: {{ .Values.cartservice.name }}
+        environment: {{ .Values.environment }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: "{{ .Values.cartservice.name }}-container"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: "{{ .Values.cartservice.container.image.name }}:{{ .Values.cartservice.container.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.cartservice.container.port }}
+        env:
+        - name: REDIS_ADDR
+          value: "{{ .Release.Name }}-{{ .Values.redis_cart.name }}-service:{{ .Values.redis_cart.service.port }}"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 64Mi
+          limits:
+            cpu: 300m
+            memory: 128Mi
+        readinessProbe:
+          initialDelaySeconds: 15
+          grpc:
+            port: {{ .Values.cartservice.container.port }}
+        livenessProbe:
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          grpc:
+            port: {{ .Values.cartservice.container.port }}

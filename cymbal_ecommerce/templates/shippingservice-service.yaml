@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.shippingservice.name }}-service"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Values.app_name }}
+    service: {{ .Values.shippingservice.name }}
+    environment: {{ .Values.environment }}
+    release: {{ .Release.Name }}
+  ports:
+  - name: grpc
+    port: {{ .Values.shippingservice.service.port }}
+    targetPort: {{ .Values.shippingservice.service.target_port }}
