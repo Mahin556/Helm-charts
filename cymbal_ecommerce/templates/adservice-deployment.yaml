@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Release.Name }}-{{ .Values.adservice.name }}-deployment"
-  namespace: "{{ .Release.Name }}-{{ .Values.environment }}-{{ .Values.namespace }}"
+  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
 spec:
   replicas: {{ .Values.adservice.pod.replicas }}
   selector:
