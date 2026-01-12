@@ -6,10 +6,8 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Values.app_name }}
-    service: {{ .Values.productcatalogservice.name }}
-    environment: {{ .Values.environment }}
-    release: {{ .Release.Name }}
+    {{- include "common_labels" . | nindent 4 }}
+    {{- include "productcatalogservice_labels" . | nindent 4 }}
   ports:
   - name: grpc
     port: {{ .Values.productcatalogservice.service.port }}
