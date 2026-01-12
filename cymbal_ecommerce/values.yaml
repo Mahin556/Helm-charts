@@ -29,7 +29,7 @@ cartservice:
       tag: cartservice
 
 redis_cart:
-  name: "redis_cart"
+  name: "redis-cart"
   pod:
     replicas: 1
   service:
