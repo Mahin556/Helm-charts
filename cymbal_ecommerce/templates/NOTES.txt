@@ -3,4 +3,6 @@ Thank you for installing {{ .Chart.Name }}.
 Your release is named {{ .Release.Name }}.
 
 RUN:
-kubectl create ns <DESIRED_NAMESPACE_NAME>
+kubectl get pods -n <DESIRED_NAMESPACE_NAME>
+kubectl get svc -n <DESIRED_NAMESPACE_NAME>
+kubectl patch svc <FRONTEND_EXTERNAL_SERVICE_NAME> -n <DESIRED_NAMESPACE_NAME> -p '{"spec": {"type": "NodePort"}}'

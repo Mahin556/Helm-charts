@@ -9,7 +9,11 @@ helm install tetris mahin-repo/tetris-game
 
 helm install demo mahin-repo/cymbal_ecommerce
 
-helm install demo mahin-repo/cymbal_ecommerce --version=0.1.3
+kubectl create ns cymbal-ecommerce-ns
 
-kubectl patch svc demo-frontend-external-service -n demo-cymbal-development -p '{"spec": {"type": "NodePort"}}'
+helm install demo mahin-repo/cymbal_ecommerce --version=0.1.6 -n cymbal-ecommerce-ns
+
+helm list -n cymbal-ecommerce-ns
+
+kubectl patch svc demo-frontend-external-service -n cymbal-ecommerce-ns -p '{"spec": {"type": "NodePort"}}'
 ```
