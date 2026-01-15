@@ -2,7 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Release.Name }}-{{ .Values.paymentservice.name }}-deployment"
-  namespace: "{{ .Release.Name }}-{{ .Values.namespace }}-{{ .Values.environment }}"
+  labels:
+    {{- include "common_labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.paymentservice.pod.replicas }}
   selector:

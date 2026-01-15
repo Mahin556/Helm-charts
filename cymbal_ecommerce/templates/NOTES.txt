@@ -1,0 +1,6 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+RUN:
+kubectl create ns <DESIRED_NAMESPACE_NAME>

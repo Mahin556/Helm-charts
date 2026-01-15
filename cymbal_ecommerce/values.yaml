@@ -1,5 +1,4 @@
 environment: "development"
-namespace: "cymbal"
 app_name: "cymbal"
 
 adservice:
