@@ -12,7 +12,7 @@ adservice:
     port: 9555
     image:
       name: mahinraza556/adservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 cartservice:
   name: "cartservice"
@@ -25,7 +25,7 @@ cartservice:
     port: 7070
     image:
       name: mahinraza556/cartservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 redis_cart:
   name: "redis-cart"
@@ -51,7 +51,7 @@ checkoutservice:
     port: 5050
     image:
       name: mahinraza556/checkoutservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 currencyservice:
   name: "currencyservice"
@@ -65,7 +65,7 @@ currencyservice:
     disable_profiler: "1"
     image:
       name: mahinraza556/currencyservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 emailservice:
   name: "emailservice"
@@ -79,7 +79,7 @@ emailservice:
     disable_profiler: "1"
     image:
       name: mahinraza556/emailservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 paymentservice:
   name: "paymentservice"
@@ -93,7 +93,7 @@ paymentservice:
     disable_profiler: "1"
     image:
       name: mahinraza556/paymentservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 productcatalogservice:
   name: "productcatalogservice"
@@ -107,7 +107,7 @@ productcatalogservice:
     disable_profiler: "1"
     image:
       name: mahinraza556/productcatalogservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 recommendationservice:
   name: "recommendationservice"
@@ -121,7 +121,7 @@ recommendationservice:
     disable_profiler: "1"
     image:
       name: mahinraza556/recommendationservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 shippingservice:
   name: "shippingservice"
@@ -135,7 +135,7 @@ shippingservice:
     disable_profiler: "1"
     image:
       name: mahinraza556/shippingservice
-      tag: a0df320-5
+      tag: a0df320-6
 
 loadgenerator:
   name: "loadgenerator"
@@ -150,7 +150,7 @@ loadgenerator:
     disable_profiler: "1"
     image:
       name: mahinraza556/loadgenerator
-      tag: a0df320-5
+      tag: a0df320-6
 
 frontend:
   name: "frontend"
@@ -169,5 +169,5 @@ frontend:
     enable_profiler: "0"
     image:
       name: mahinraza556/frontend
-      tag: a0df320-5
+      tag: a0df320-6
 
