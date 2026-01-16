@@ -11,7 +11,7 @@ adservice:
   container:
     port: 9555
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/adservice
       tag: adservice
 
 cartservice:
@@ -24,7 +24,7 @@ cartservice:
   container:
     port: 7070
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/cartservice
       tag: cartservice
 
 redis_cart:
@@ -50,7 +50,7 @@ checkoutservice:
   container:
     port: 5050
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/checkoutservice
       tag: checkoutservice
 
 currencyservice:
@@ -64,7 +64,7 @@ currencyservice:
     port: 7000
     disable_profiler: "1"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/currencyservice
       tag: currencyservice
 
 emailservice:
@@ -78,7 +78,7 @@ emailservice:
     port: 8080
     disable_profiler: "1"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/emailservice
       tag: emailservice
 
 paymentservice:
@@ -92,7 +92,7 @@ paymentservice:
     port: 50051
     disable_profiler: "1"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/paymentservice
       tag: paymentservice
 
 productcatalogservice:
@@ -106,7 +106,7 @@ productcatalogservice:
     port: 3550
     disable_profiler: "1"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/productcatalogservice
       tag: productcatalogservice
 
 recommendationservice:
@@ -120,7 +120,7 @@ recommendationservice:
     port: 8080
     disable_profiler: "1"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/recommendationservice
       tag: recommendationservice
 
 shippingservice:
@@ -134,7 +134,7 @@ shippingservice:
     port: 50051
     disable_profiler: "1"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/shippingservice
       tag: shippingservice
 
 loadgenerator:
@@ -149,7 +149,7 @@ loadgenerator:
     port: 50051
     disable_profiler: "1"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/loadgenerator
       tag: loadgenerator
 
 frontend:
@@ -168,6 +168,6 @@ frontend:
     port: 8080
     enable_profiler: "0"
     image:
-      name: mahinraza556/ecommerce
+      name: mahinraza556/frontend
       tag: frontend
 
