@@ -3,7 +3,17 @@ entries:
   cymbal_ecommerce:
   - apiVersion: v2
     appVersion: 1.16.2
-    created: "2026-01-16T16:51:17.181624785Z"
+    created: "2026-01-16T17:17:43.019970913Z"
+    description: cymbal_ecommerce application with 11 microservices
+    digest: cd0d496d2c1b44fa8007dc3875aa4b7cb8ef2c46b26769d4246904d7a5b1264b
+    name: cymbal_ecommerce
+    type: application
+    urls:
+    - cymbal_ecommerce-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.16.2
+    created: "2026-01-16T17:17:43.017764021Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: 133ef1d1cfc7d0c89f9d92fd32e7255866e149d07e0856772a49f37e91d52b07
     name: cymbal_ecommerce
@@ -13,7 +23,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 1.16.1
-    created: "2026-01-16T16:51:17.180964314Z"
+    created: "2026-01-16T17:17:43.016442295Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: 05b6a9a102d35ef9fca54f64132bdeb277f3bbb227f073a7bf09f603e377e083
     name: cymbal_ecommerce
@@ -23,7 +33,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 1.16.1
-    created: "2026-01-16T16:51:17.180341501Z"
+    created: "2026-01-16T17:17:43.015091044Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: 349e3258e427f7d2b67237ef81b5cefc15943d6fe42155e7bf18c570a50dbbaa
     name: cymbal_ecommerce
@@ -33,7 +43,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.179302137Z"
+    created: "2026-01-16T17:17:43.01291061Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: c5329256b9e7c89a2d30d35f9088ee5e14d839e9512ce5861f2783ed0cb61f63
     name: cymbal_ecommerce
@@ -43,7 +53,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.17818874Z"
+    created: "2026-01-16T17:17:43.011605626Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: a007c8c158460375c4409046a8a92f4a3ba06c89ac10e8e271d9eb4df0cdd2ff
     name: cymbal_ecommerce
@@ -53,7 +63,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.176977346Z"
+    created: "2026-01-16T17:17:43.010706778Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: bb5bc08700f5b5581da0146863c4c4946b96fa87318111056ce01b4d1ca89af4
     name: cymbal_ecommerce
@@ -63,7 +73,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.1759055Z"
+    created: "2026-01-16T17:17:43.009487274Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: db254d5e0c4240f29bad4359ae58df17b36edfcfcb97e3ee6acf5a9fceb1accd
     name: cymbal_ecommerce
@@ -73,7 +83,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.17455268Z"
+    created: "2026-01-16T17:17:43.008305295Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: c92ddac696df464d3773ab0e6b10f616a7da6cab38a9e42a6757fed51e9dffd6
     name: cymbal_ecommerce
@@ -83,7 +93,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.17263156Z"
+    created: "2026-01-16T17:17:43.006924393Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: c0bb30b10245321ac5c5520e62a08d67880dd94ba6ccdcaee33335959463cc0e
     name: cymbal_ecommerce
@@ -93,7 +103,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.171192068Z"
+    created: "2026-01-16T17:17:43.006140078Z"
     description: cymbal_ecommerce application with 11 microservices
     digest: abb256e5c0e043908d2108d83aba82dd108d60b56bf69d0746ac9b4c3b10424c
     name: cymbal_ecommerce
@@ -104,7 +114,7 @@ entries:
   go-portfolio-app:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.181839462Z"
+    created: "2026-01-16T17:17:43.020315006Z"
     description: A Helm chart for Kubernetes
     digest: 694b06afe63e11b3c839bf13101ee6d1c02df6a942dbf1f95a1dcb0a1522a782
     name: go-portfolio-app
@@ -115,7 +125,7 @@ entries:
   tetris-game:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-01-16T16:51:17.182013289Z"
+    created: "2026-01-16T17:17:43.021093611Z"
     description: A Helm chart for Kubernetes
     digest: db5f0f442a1eeab398e4d733ff0fd3f480f1f500d519327fcc82b13546b239a5
     name: tetris-game
@@ -123,4 +133,4 @@ entries:
     urls:
     - tetris-game-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-16T16:51:17.16918735Z"
+generated: "2026-01-16T17:17:43.005093205Z"
