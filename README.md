@@ -11,9 +11,13 @@ helm install demo mahin-repo/cymbal_ecommerce
 
 kubectl create ns cymbal-ecommerce-ns
 
-helm install demo mahin-repo/cymbal_ecommerce --version=0.1.6 -n cymbal-ecommerce-ns
+helm install demo mahin-repo/cymbal_ecommerce --version=0.1.9 -n cymbal-ecommerce-ns
 
 helm list -n cymbal-ecommerce-ns
 
 kubectl patch svc demo-frontend-external-service -n cymbal-ecommerce-ns -p '{"spec": {"type": "NodePort"}}'
+
+kubectl get pods -n cymbal-ecommerce-ns
+
+kubectl get svc -n cymbal-ecommerce-ns
 ```
