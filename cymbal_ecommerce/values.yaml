@@ -11,7 +11,7 @@ adservice:
   container:
     port: 9555
     image:
-      name: mahinraza556/adservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/adservice
       tag: 0fba606-8
 
 cartservice:
@@ -24,7 +24,7 @@ cartservice:
   container:
     port: 7070
     image:
-      name: mahinraza556/cartservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/cartservice
       tag: 0fba606-8
 
 redis_cart:
@@ -50,7 +50,7 @@ checkoutservice:
   container:
     port: 5050
     image:
-      name: mahinraza556/checkoutservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/checkoutservice
       tag: 0fba606-8
 
 currencyservice:
@@ -64,7 +64,7 @@ currencyservice:
     port: 7000
     disable_profiler: "1"
     image:
-      name: mahinraza556/currencyservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/currencyservice
       tag: 0fba606-8
 
 emailservice:
@@ -78,7 +78,7 @@ emailservice:
     port: 8080
     disable_profiler: "1"
     image:
-      name: mahinraza556/emailservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/emailservice
       tag: 0fba606-8
 
 paymentservice:
@@ -92,7 +92,7 @@ paymentservice:
     port: 50051
     disable_profiler: "1"
     image:
-      name: mahinraza556/paymentservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/paymentservice
       tag: 0fba606-8
 
 productcatalogservice:
@@ -106,7 +106,7 @@ productcatalogservice:
     port: 3550
     disable_profiler: "1"
     image:
-      name: mahinraza556/productcatalogservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/productcatalogservice
       tag: 0fba606-8
 
 recommendationservice:
@@ -120,7 +120,7 @@ recommendationservice:
     port: 8080
     disable_profiler: "1"
     image:
-      name: mahinraza556/recommendationservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/recommendationservice
       tag: 0fba606-8
 
 shippingservice:
@@ -134,7 +134,7 @@ shippingservice:
     port: 50051
     disable_profiler: "1"
     image:
-      name: mahinraza556/shippingservice
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/shippingservice
       tag: 0fba606-8
 
 loadgenerator:
@@ -149,7 +149,7 @@ loadgenerator:
     port: 50051
     disable_profiler: "1"
     image:
-      name: mahinraza556/loadgenerator
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/loadgenerator
       tag: 0fba606-8
 
 frontend:
@@ -168,6 +168,6 @@ frontend:
     port: 8080
     enable_profiler: "0"
     image:
-      name: mahinraza556/frontend
+      name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/frontend
       tag: 0fba606-8
 
