@@ -20,4 +20,16 @@ kubectl patch svc demo-frontend-external-service -n cymbal-ecommerce-ns -p '{"sp
 kubectl get pods -n cymbal-ecommerce-ns
 
 kubectl get svc -n cymbal-ecommerce-ns
+
+helm search repo mahin-repo/cymbal_ecommerce --versions
+
+helm show values mahin-repo/cymbal_ecommerce --version 1.1.4
+
+helm show chart mahin-repo/cymbal_ecommerce --version 1.1.4
+
+helm show readme mahin-repo/cymbal_ecommerce --version 1.1.4
+
+helm show all mahin-repo/cymbal_ecommerce --version 1.1.4
+
+
 ```
