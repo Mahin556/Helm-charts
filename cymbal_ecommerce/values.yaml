@@ -16,7 +16,7 @@ adservice:
     port: 9555
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/adservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 cartservice:
   name: "cartservice"
@@ -29,7 +29,7 @@ cartservice:
     port: 7070
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/cartservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 redis_cart:
   name: "redis-cart"
@@ -55,7 +55,7 @@ checkoutservice:
     port: 5050
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/checkoutservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 currencyservice:
   name: "currencyservice"
@@ -69,7 +69,7 @@ currencyservice:
     disable_profiler: "1"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/currencyservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 emailservice:
   name: "emailservice"
@@ -83,7 +83,7 @@ emailservice:
     disable_profiler: "1"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/emailservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 paymentservice:
   name: "paymentservice"
@@ -97,7 +97,7 @@ paymentservice:
     disable_profiler: "1"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/paymentservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 productcatalogservice:
   name: "productcatalogservice"
@@ -111,7 +111,7 @@ productcatalogservice:
     disable_profiler: "1"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/productcatalogservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 recommendationservice:
   name: "recommendationservice"
@@ -125,7 +125,7 @@ recommendationservice:
     disable_profiler: "1"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/recommendationservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 shippingservice:
   name: "shippingservice"
@@ -139,7 +139,7 @@ shippingservice:
     disable_profiler: "1"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/shippingservice
-      tag: 686e306-19
+      tag: 686e306-20
 
 loadgenerator:
   name: "loadgenerator"
@@ -154,7 +154,7 @@ loadgenerator:
     disable_profiler: "1"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/loadgenerator
-      tag: 686e306-19
+      tag: 686e306-20
 
 frontend:
   name: "frontend"
@@ -173,5 +173,5 @@ frontend:
     enable_profiler: "0"
     image:
       name: 361769558190.dkr.ecr.ap-south-1.amazonaws.com/frontend
-      tag: 686e306-19
+      tag: 686e306-20
 
