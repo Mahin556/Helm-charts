@@ -2,6 +2,10 @@ environment: "development"
 namespace: "cymbal"
 app_name: "cymbal"
 
+global:
+  imagePullSecrets:
+    - name: ecr-pull-secret
+
 adservice:
   name: "adservice"
   pod:
