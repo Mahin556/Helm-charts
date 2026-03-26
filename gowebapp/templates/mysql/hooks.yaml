@@ -1,0 +1,39 @@
+# Pre-install hook to ensure MySQL is installed first
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "gowebapp.fullname" . }}-mysql-check
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: mysql-check
+          image: mysql:8.0
+          command:
+            - sh
+            - -c
+            - |
+              echo "Checking MySQL availability..."
+              for i in {1..30}; do
+                if mysqladmin ping -h {{ .Values.mysql.config.host }} -P {{ .Values.mysql.config.port }} \
+                  -u root -p${MYSQL_ROOT_PASSWORD} --silent; then
+                  echo "MySQL is ready!"
+                  exit 0
+                fi
+                echo "Attempt $i: MySQL not ready, waiting..."
+                sleep 10
+              done
+              echo "MySQL not ready after 5 minutes"
+              exit 1
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "gowebapp.fullname" . }}-secrets
+                  key: mysql-root-password

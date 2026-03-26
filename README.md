@@ -31,5 +31,5 @@ helm show readme mahin-repo/cymbal_ecommerce --version 1.1.4
 
 helm show all mahin-repo/cymbal_ecommerce --version 1.1.4
 
-
+helm install gowebapp mahin-repo/gowebapp -n gowebapp --create-namespace
 ```
