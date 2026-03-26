@@ -1,0 +1,112 @@
+{{- if .Values.mysql.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: mysql
+    {{- include "gowebapp.labels" . | nindent 4 }}
+spec:
+  serviceName: mysql-service
+  replicas: {{ .Values.mysql.replicaCount }}
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      # Init container — injects the app password into init.sql
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        
+      initContainers:
+        - name: prepare-init-sql
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              sed "s/__MYSQL_APP_PASSWORD__/${MYSQL_APP_PASSWORD}/g" \
+                /sql-template/init.sql > /sql-out/init.sql
+              echo "Init SQL prepared"
+          env:
+            - name: MYSQL_APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "gowebapp.fullname" . }}-secrets
+                  key: mysql-app-password
+          volumeMounts:
+            - name: sql-template
+              mountPath: /sql-template
+            - name: sql-out
+              mountPath: /sql-out
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+
+      # Main MySQL container
+      containers:
+        - name: mysql
+          image: {{ .Values.mysql.image }}
+          ports:
+            - containerPort: 3306
+              name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "gowebapp.fullname" . }}-secrets
+                  key: mysql-root-password
+            - name: MYSQL_DATABASE
+              value: {{ .Values.mysql.config.database }}
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+            - name: sql-out
+              mountPath: /docker-entrypoint-initdb.d
+          livenessProbe:
+            exec:
+              command: ["mysqladmin", "ping", "-h", "localhost"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "mysql -u root -p${MYSQL_ROOT_PASSWORD} -e 'SELECT 1'"
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            {{- toYaml .Values.mysql.resources | nindent 12 }}
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 999
+
+      volumes:
+        - name: sql-template
+          configMap:
+            name: {{ include "gowebapp.fullname" . }}-mysql-init
+        - name: sql-out
+          emptyDir: {}
+
+  # PVC created automatically for each pod by StatefulSet
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        {{- if .Values.mysql.storage.storageClass }}
+        storageClassName: {{ .Values.mysql.storage.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.mysql.storage.size }}
+{{- end }}

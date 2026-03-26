@@ -1,0 +1,21 @@
+{{- if .Values.app.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gowebapp.fullname" . }}-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gowebapp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.app.service.type }}
+  selector:
+    {{- include "gowebapp.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.app.service.port }}
+      targetPort: {{ .Values.app.service.targetPort }}
+      protocol: TCP
+      {{- if and (eq .Values.app.service.type "NodePort") .Values.app.service.nodePort }}
+      nodePort: {{ .Values.app.service.nodePort }}
+      {{- end }}
+{{- end }}

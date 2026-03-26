@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "gowebapp.fullname" . }}-config
+  namespace: {{ .Release.Namespace | default "gowebapp" }}
+  labels:
+    {{- include "gowebapp.labels" . | nindent 4 }}
+data:
+  config.json.tmpl: |
+    {
+      "Database": {
+        "Type": "MySQL",
+        "MySQL": {
+          "Username": "{{ .Values.mysql.config.user }}",
+          "Password": "__MYSQL_APP_PASSWORD__",
+          "Name": "{{ .Values.mysql.config.database }}",
+          "Hostname": "{{ .Values.mysql.config.host }}",
+          "Port": {{ .Values.mysql.config.port }},
+          "Parameter": "?parseTime=true"
+        }
+      },
+      "Server": {
+        "Hostname": "",
+        "UseHTTP": {{ .Values.configmap.server.useHTTP }},
+        "UseHTTPS": {{ .Values.configmap.server.useHTTPS }},
+        "HTTPPort": {{ .Values.configmap.server.httpPort }},
+        "HTTPSPort": {{ .Values.configmap.server.httpsPort | default 443 }}
+      },
+      "Session": {
+        "SecretKey": "__SESSION_SECRET_KEY__",
+        "Name": "{{ .Values.configmap.session.name }}",
+        "Options": {
+          "Path": "/",
+          "Domain": "",
+          "MaxAge": {{ .Values.configmap.session.maxAge }},
+          "Secure": {{ .Values.configmap.session.secure }},
+          "HttpOnly": {{ .Values.configmap.session.httpOnly }}
+        }
+      },
+      "Template": {
+        "Root": "base",
+        "Children": [
+          "partial/menu",
+          "partial/footer"
+        ]
+      },
+      "View": {
+        "BaseURI": "{{ .Values.configmap.view.baseURI }}",
+        "Extension": "{{ .Values.configmap.view.extension }}",
+        "Folder": "{{ .Values.configmap.view.folder }}",
+        "Name": "blank",
+        "Caching": {{ .Values.configmap.view.caching }}
+      }
+    }

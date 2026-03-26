@@ -1,0 +1,20 @@
+{{- if .Values.mysql.enabled }}
+---
+# Headless service — gives MySQL a stable DNS name
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: mysql
+    {{- include "gowebapp.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: {{ .Values.mysql.config.port }}
+      targetPort: 3306
+      name: mysql
+  clusterIP: None  # headless — required for StatefulSet DNS
+{{- end }}

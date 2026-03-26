@@ -1,0 +1,82 @@
+# Global settings
+global:
+  namespace: gowebapp
+  imagePullPolicy: Always
+
+# Application settings
+app:
+  name: gowebapp
+  replicaCount: 2
+  image:
+    repository: mahinraza556/gowebapp
+    tag: latest
+    pullPolicy: Always
+  service:
+    enabled: true
+    type: LoadBalancer
+    port: 80
+    targetPort: 8080
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  env:
+    APP_ENV: production
+    APP_PORT: "8080"
+  securityContext:
+    runAsUser: 1001
+    runAsNonRoot: true
+    fsGroup: 1001
+
+
+# Database settings
+mysql:
+  enabled: true
+  image: mysql:8.0
+  replicaCount: 1
+  storage:
+    size: 5Gi
+    storageClass: ""  # Use default storage class
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  config:
+    database: gowebapp
+    user: gowebapp
+    host: mysql-service
+    port: 3306
+
+# ConfigMap settings
+configmap:
+  server:
+    httpPort: 8080
+    useHTTP: true
+    useHTTPS: false
+  session:
+    name: gosess
+    maxAge: 28800
+    secure: false
+    httpOnly: true
+  view:
+    caching: true
+    baseURI: /
+    extension: tmpl
+    folder: template
+
+# Sealed Secrets (encrypted values)
+sealedSecrets:
+  # These is encrypted with kubeseal with cluster-wide scope
+  mysql:
+    appPassword: "AgCXO5Qe9p7HuTaRb4fbEcMUIy5iemMCc0V2Eh4Ih1gFB78w1CfcGejm/rb2qdZKYsW7IwLXPW1EFkrGM0fx4CnlwsgQf7jWcu7EovQL2j8i2Mzp0M+ffL8Aj+26Qt/VOlcortQ/km7qaZumk4vHKDkvGQF76tzbi3tP5bqdHcFsF5ZAhfRjnF3HdOM9yzCc1ZfiUgwfecj7UjY8FFjhGkq8AHdqviWzJpEdM8BhRk+LP37rXtH4wdPBF4L2UD4l6Ar4oEwrTkl+WZ5gmDcYbJyyOQWoSyFJRYBl1Nu4rAmb4dGppp93zzNelmibfuHjTeJCsdL6oBlj7Qtj3E76ZsNlVuEZ2v7L11ipGkq1TsORSWmHTBVlCBxopASdPpZCyTxK+Ii95cTy0DOLxOOhMh7WADMtJwLyGutY60die8rzqbrGfxg3yTgQNDTWIX3FlOfAawPoG4HpyYrm7bYZa8I46C/Q3PCbG4NO2a9zHFRxySY67Y0jJVhDZKESsfbYmR6+UtaNqiS0wofufZfImtudG7Tk80n08ccaDv83jN3KLnGy++772n70xz6W6ZlFukEQa37TL0p7deTCcVrzXiOoP4HY2v0Z+6tycDTnisxyEqoRBcB9L0PlzG/eXCcxvNINb1R0xD7Y9d0kUOIQFvE1d2j02GzXG80ttjXwaXU/7j3g4AUenZGD0YCpyHonWa39mJinc9OSXvOpwYzSIXY="  # Will be encrypted
+    rootPassword: "AgAXYAJ9AivLFAf1nYqV28x/0EfDWvBEjACVc1sEeHBghmmdWirooGwx9Oz+BzKRvXK2o95RjN1HRWOtISdzc+SSQGXrpAGMAccNlmB8RRA9BZmrUB3a6NaS59cAcaYo2LafO/SkR3otQLrr8LqK2nZo090+s3aJEhGvtgg7qARdjF5IorDafR0ZVKvJxH1QeUuqXvm9dONIXIbKxEn2zrTWLKAI/nn/dn5kMOxrF0G2uRDWiO4RGTIBGbeC/BPnEykDU5SWqoBcjaHP20GaFnJWdLlz5DQ2fmXQDLLAzAwVCN83mSTAQNbl1wjPp2pcE5d1oJZBw5jYJ6z7snZl2/Gn2vBSkrQFB+wmML+sDRaIQYfuQGlp0Rh8aW3WYTw/lZiiy2Rq1/Q4po6DTV6XpEAAY7tGbx36DKy7c9GY8ZP5NMR0l5I9pgs9LR2DmY4Ly8K8ztgQvRj1mXb3VS10fTwzEZxVaP+cyEOIGicSJRHlIn6yJ9fjm/IhVpNYhBqTB55FFwqxWK93suNF668PiHJ1bjPxkFZAAo5mtOmqfOi0Tu2E2srqTsdLQL7CEbWPlhUTaU0iD1hiTna4nzPNpikvnZKCZL0T7M4x+DAkzxnuIG/EqVEMv9cIX0b7rPG6huqc7RkYTsnYe1EQO4doRgpqexUI9AAD+Yz2+6OPkjpftFP/VlWzweoheQPEoQ2xhJ08Mu9dOVJP9LjWwetJ9X3T1gS9"  # Will be encrypted
+  session:
+    secretKey: "AgDl/aER82A5V87fXlPzCrzs3Kp17V7N0HMwMnG22yyO6nTwKMqJ5DeqaZe+jLUG5t/kxKS7PJK6yBqnBU2Leh00NpVr+7xpc7/jn1zWuikHwEl9zgVLFzDjF5LHnA6tuhFTGB1E2/HlMYzUjndRp9eKqGqjDHp+Q8eQc5AJSJTXb8hC6BQybmhlalcUqtcUEZcUjlbtyBPeYAdXgo6CV4oXZ2BiSG7SfoMUgyfwK1r29ndylPD/y52ORxdpNDeyCSBSq2Ekt62vkkKdDPk5r+GH8/S1g20zaf/afH2ltUbIeCjJKJtLJmDQISUlpAWd2A2AbS0vah786DG66csojzTwXPyenweTVVEQGRkFBA2i/MzGALhs6ANEpbXj+aUDieWXbXljD7iLfYvzrrc42+3X8VAoErYWG9oES1skhfb5KJTZK++vpegh8qVCtrDamAkKYbuQtWC3T2uNkK6ykFkevKzE7oa8u2hFIeXQTm2nYeqtjZSiQhPaJYSJs5EVzTR+29hVJzOhcLPbjXrb5bJ+FKCI98OjaawsD+6S5q41VblTwGfCp1VD/EVZuSJ80FY8gAo6HTEUiJGpHJzuw+iPyHfoRuuThLeUWU42whSizWGeKF6YYfKO6J7Uo1VurpJ3wsACIgRlGteFKq+c08kDgK0F7cvSdDG+9jKpVxLniQpKH44RDgU9xBDNhs6C9OdXylb1YQMV+2aEG9JKVOYUB4TbnxOxdg=="  # Will be encrypted
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
