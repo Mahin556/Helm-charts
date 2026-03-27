@@ -9,7 +9,7 @@ app:
   replicaCount: 2
   image:
     repository: mahinraza556/gowebapp
-    tag: "23626901963"
+    tag: "23627313417"
     pullPolicy: Always
   service:
     enabled: true
