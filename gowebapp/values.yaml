@@ -80,3 +80,47 @@ sealedSecrets:
     secretKey: "AgDl/aER82A5V87fXlPzCrzs3Kp17V7N0HMwMnG22yyO6nTwKMqJ5DeqaZe+jLUG5t/kxKS7PJK6yBqnBU2Leh00NpVr+7xpc7/jn1zWuikHwEl9zgVLFzDjF5LHnA6tuhFTGB1E2/HlMYzUjndRp9eKqGqjDHp+Q8eQc5AJSJTXb8hC6BQybmhlalcUqtcUEZcUjlbtyBPeYAdXgo6CV4oXZ2BiSG7SfoMUgyfwK1r29ndylPD/y52ORxdpNDeyCSBSq2Ekt62vkkKdDPk5r+GH8/S1g20zaf/afH2ltUbIeCjJKJtLJmDQISUlpAWd2A2AbS0vah786DG66csojzTwXPyenweTVVEQGRkFBA2i/MzGALhs6ANEpbXj+aUDieWXbXljD7iLfYvzrrc42+3X8VAoErYWG9oES1skhfb5KJTZK++vpegh8qVCtrDamAkKYbuQtWC3T2uNkK6ykFkevKzE7oa8u2hFIeXQTm2nYeqtjZSiQhPaJYSJs5EVzTR+29hVJzOhcLPbjXrb5bJ+FKCI98OjaawsD+6S5q41VblTwGfCp1VD/EVZuSJ80FY8gAo6HTEUiJGpHJzuw+iPyHfoRuuThLeUWU42whSizWGeKF6YYfKO6J7Uo1VurpJ3wsACIgRlGteFKq+c08kDgK0F7cvSdDG+9jKpVxLniQpKH44RDgU9xBDNhs6C9OdXylb1YQMV+2aEG9JKVOYUB4TbnxOxdg=="  # Will be encrypted
   annotations:
     sealedsecrets.bitnami.com/cluster-wide: "true"
+
+# Network Policy
+networkPolicy:
+  enabled: true  # Set to false to disable network policies
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  sslRedirect: true
+  annotations: {}
+
+  hosts:
+    - host: gowebapp.mahinraza.online
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: api.gowebapp.mahinraza.online
+      paths:
+        - path: /
+          pathType: Prefix
+
+  tls:
+    enabled: true
+    secretName: gowebapp-tls
+    
+    # Option 1: Use Cert-Manager (Recommended for production)
+    certManager:
+      enabled: false
+      issuerName: letsencrypt-prod
+      duration: 2160h  # 90 days
+      renewBefore: 360h  # 15 days
+    
+    # Option 2: Use Sealed Secret (for imported/self-signed certs)
+    sealedSecret:
+      enabled: true  # Set to true if not using cert-manager
+      cert: "AgDMTCJiIlhaVUOmAH36RNy7jc4vsYcpdrHxMwBkB2TXggDUuthOu1DiWsJIN0ORVGx7j/r1jmqh84oJuzRsYi4CEoYEoUv4mi+/amg4tsOadw8XexdAAElUJfWqusEoBcX9irmvv3yvi1lRBg8i0AeASeiEKLSvCB4uiLZB+fZiQoQ7yS6bz8Z6lP7LqQmRFfOZ0wQfazd0q8fimP8aQ4MhYIi0jKgj4+2Y94JhpUO0TVy576pDHgytNtBFqCpiTCLlAbT7zIBEK0vq1tpdN8ZV+DTHL3/tzJ4n4XNEl7cKTnhd/fT6BYldF/xP+DMOdKbb6/HpSWbeYkOUHgUtdB9Yv4czTEGqlDs8ZPzbeuPNlFATiZ8jlP6dlCguxIJqVJM1+iw5SMr0tCHTNKqZn3rYr8UKpdKSlvbuFFSR5TC1niJW9oUi+c9cWBbS7+mLvTX4Reia9jRB29PkpXbH5LfAgntxB/9JPqCboC06t7WGIuVnL9KaJ0Xkg9v1+iDULNPxqi2YM1qKYMWVtq9eeuerdV9R46DrWHrDs4z6ujTYS7RtyDv90A0CfP2ul/gYX+6JWPzBylQrU26mz0F/tcFLS6ClgQABAHnERgJJTPcBJf+mEQNmir9bnsH5ZCWSWs+z8lrxF4qoQX7zsQgaOf+pd5dkbw0GEMoX0yryzCtcM/p1SKQbkmUpvtq1RWg4Bpu1kicUeEj9QU+wLnQVMQ=="  # Encrypted certificate
+      key: "AgClbWTU2ymLv+inxurc0zC5ux+VmmfxB6egpj+YaNbagle4nFviqztIuPyiYidEYidP5i+rWXf0u33mVZMGH/ZcQKL1yNsIsb6WnFXly4Ijt1kSptxfVOor1F1Yfj9VYSX2kL94M/ZQPzrYA7PJQ9xJEbo2ghgu7ApIC3s8pLVduAtkgqbwm9hE716n79nSK3uFPlM6bdjI3lv9AHlW22FcFBZ9fORdN6cQhY+wb5/rPeQ5TpNWT42tOg38ezTdOAA5WQno4HuJp8b+AIZEC9NtWXZqd8V4y0tvpt+adenuGPecWHhL+D6UODdt8Bh6JRMc3s3FlFOERERFx6OEaVBtpj1wvjeAa+CIk4oBHPWrRJvmj+cBr6lxWuDNAr3LnyWTo8G0H+ofiEcttp4KvNK6obez/yo+Z078GELrMzckjIPtOE4zfIimJlj3A47V3YFvJHNW/5AXvIku+kb6LugQgV8hN5Yz8RWlww7/MGlzh0eJ+1z1p7urmg1XYbNluv/KuAaxVtQseN4Xku8j/hmWSft5sb+o7C9Lc+PED0bCck8c7z5amvWYuVPpqbZQHJFlHa5FNI9oibNIo9r506365+qJunyZXWkXI0LzTnTlRWz/xe4s+Mvr034y1SIonjuA6glapuT3+raN+Vf9/4NTK7LJS1R47Ffvu0pPFX5TZm6is2xILlhifPGGqMuk9VCDRLn8C13oo/sLjlWOOw=="   # Encrypted private key
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
