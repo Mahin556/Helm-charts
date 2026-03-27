@@ -2,7 +2,7 @@ apiVersion: v2
 name: gowebapp
 description: Go Web Application with Sealed Secrets
 type: application
-version: 1.2.4
+version: 1.2.5
 appVersion: 1.1.1
 keywords:
   - go
