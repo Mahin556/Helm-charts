@@ -42,17 +42,29 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 openssl x509 -in tls.crt -text -noout
 
-echo -n '$(cat tls.crt)' | kubeseal \
-  --controller-name=sealed-secrets \
-  --controller-namespace=kube-system \
-  --scope=cluster-wide \
-  --raw \
-  --from-file=/dev/stdin
+# kubectl create secret tls gowebapp-tls \
+#   --cert=tls.crt \
+#   --key=tls.key \
+#   --dry-run=client \
+#   -oyaml \
+#   -n default > secret.yaml
 
-echo -n '$(cat tls.key)' | kubeseal \
+# kubeseal --controller-name=sealed-secrets \
+#   --controller-namespace=kube-system \
+#   --scope=cluster-wide \
+#   -f secret.yaml -w sealed-secret.yaml 
+
+kubeseal \
   --controller-name=sealed-secrets \
   --controller-namespace=kube-system \
   --scope=cluster-wide \
   --raw \
-  --from-file=/dev/stdin
+  < tls.crt
+
+kubeseal \
+  --controller-name=sealed-secrets \
+  --controller-namespace=kube-system \
+  --scope=cluster-wide \
+  --raw \
+  < tls.key
 ```
