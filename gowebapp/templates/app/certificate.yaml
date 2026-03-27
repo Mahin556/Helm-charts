@@ -1,4 +1,4 @@
-{{- if .Values.ingress.certManager.enabled }}
+{{- if .Values.ingress.tls.certManager.enabled }}
 # Let Cert-Manager create the certificate
 apiVersion: cert-manager.io/v1
 kind: Certificate
