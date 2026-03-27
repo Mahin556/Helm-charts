@@ -9,7 +9,7 @@ app:
   replicaCount: 2
   image:
     repository: mahinraza556/gowebapp
-    tag: latest
+    tag: "23626901963"
     pullPolicy: Always
   service:
     enabled: true
