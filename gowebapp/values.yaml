@@ -1,0 +1,264 @@
+# =============================================================================
+# Global Settings
+# Shared values used across the chart
+# =============================================================================
+global:
+  namespace: gowebapp
+  appName: gowebapp
+  imagePullPolicy: Always
+  environment: production        # dev | staging | production
+
+
+# =============================================================================
+# Cert-Manager Installation
+# Installs cert-manager for managing TLS certificates
+# =============================================================================
+certManager:
+  enabled: true
+
+# =============================================================================
+# Application
+# =============================================================================
+deployment:
+  replicaCount: 2
+  
+  suffix: '-deployment'
+  
+  image:
+    repository: mahinraza556/gowebapp
+    tag: "23628467642"
+    pullPolicy: Always
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  
+  env:
+    APP_ENV: production
+    
+  securityContext:
+    runAsUser: 1001
+    runAsNonRoot: true
+    fsGroup: 1001
+
+# =============================================================================
+# Service
+# =============================================================================
+service:
+  enabled: true
+  suffix: '-service'
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# =============================================================================
+# Init Job — Database Initialization
+# Runs once on install to seed/migrate the database schema
+# =============================================================================
+initDbJob:
+  enabled: true
+  suffix: '-init-db-job'
+  ttlSecondsAfterFinished: 300          # auto-cleanup after 5 mins
+  restartPolicy: OnFailure
+
+  image:
+    repository: mysql
+    tag: "8.0"
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# =============================================================================
+# MySQL (In-cluster database)
+# Set enabled: false if using external DB only
+# =============================================================================
+mysql:
+  enabled: false
+
+  suffix: '-mysql'
+
+  image:
+    repository: mysql
+    tag: "8.0"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 1
+
+  storage:
+    size: 5Gi
+    storageClass: ""                    # empty = use cluster default
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  config:
+    database: gowebapp
+    user: gowebapp
+    host: mysql-service
+    port: 3306
+
+
+# =============================================================================
+# External Secrets — Vault Integration
+# Pulls secrets from HashiCorp Vault via ClusterSecretStore
+# Requires external-secrets operator installed on cluster
+# =============================================================================
+externalSecrets:
+  enabled: true
+
+  store:
+    name: vault-gowebapp-store
+    kind: ClusterSecretStore             # ClusterSecretStore | SecretStore
+
+  refreshInterval: 1h
+  filePermission: "0644"
+
+  # Each entry maps to one ExternalSecret CR + one K8s Secret
+  secrets:
+    appCredentials:
+      enabled: true
+      suffix: '-db-app-credentials'
+      vaultPath: 'prod/gowebapp/database/app_cred'
+      keys:
+        - secretKey: username
+          property: username
+        - secretKey: password
+          property: password
+        - secretKey: database
+          property: database
+        - secretKey: session-secret-key
+          property: session-secret-key
+
+    rootCredentials:
+      enabled: true
+      suffix: '-db-root-credentials'
+      vaultPath: 'prod/do/database/mysql/root_cred'
+      keys:
+        - secretKey: username
+          property: username
+        - secretKey: password
+          property: password
+
+    dbEndpoint:
+      enabled: true
+      suffix: '-db-endpoint'
+      vaultPath: 'prod/do/database/mysql/endpoint'
+      keys:
+        - secretKey: host
+          property: host
+        - secretKey: port
+          property: port
+
+
+# =============================================================================
+# External Database (DigitalOcean Managed MySQL)
+# Creates a Kubernetes ExternalName Service pointing to remote DB
+# Set enabled: false if using in-cluster MySQL above
+# =============================================================================
+externalDatabase:
+  enabled: true
+  serviceName: mysql-external-service
+  host: db-mysql-nyc3-01091-do-user-33721151-0.e.db.ondigitalocean.com
+  port: 25060
+  portName: mysql
+
+# =============================================================================
+# ConfigMap — Application Configuration
+# =============================================================================
+config:
+  suffix: '-config'
+  mode: 0644
+
+  server:
+    httpPort: 8080
+    useHTTP: true
+    useHTTPS: false
+
+  session:
+    name: gosess
+    maxAge: 28800
+    secure: false
+    httpOnly: true
+
+  view:
+    caching: true
+    baseURI: /
+    extension: tmpl
+    folder: template
+
+# =============================================================================
+# TLS / Cert Manager
+# Controls Issuer and Certificate CR creation
+# Hosts are pulled from ingress.hosts above in templates
+# =============================================================================
+tls:
+  enabled: true
+  suffix: '-tls'
+
+  issuer:
+    enabled: true                       # set false if ClusterIssuer already exists
+    kind: Issuer                        # Issuer | ClusterIssuer
+    suffix: '-issuer'
+    acme:
+      email: mahinraza556@gmail.com
+      # staging: https://acme-staging-v02.api.letsencrypt.org/directory
+      server: https://acme-v02.api.letsencrypt.org/directory
+
+  certificate:
+    duration: 2160h                     # 90 days
+    renewBefore: 360h                   # renew 15 days before expiry
+
+
+# =============================================================================
+# Ingress
+# All ingress + TLS config in one place
+# Hosts defined here ONCE — referenced by cert and ingress templates
+# =============================================================================
+ingress:
+  enabled: true
+
+  suffix: '-ingress'
+
+  className: nginx
+  sslRedirect: true
+  annotations: {}
+
+  hosts:
+    - host: mahinraza.online
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: gowebapp.mahinraza.online
+      paths:
+        - path: /
+          pathType: Prefix
+
+  tls:
+    enabled: true
+    secretName: gowebapp-tls-secret # Used by both cert and ingress templates
+
+# =============================================================================
+# Horizontal Pod Autoscaler
+# =============================================================================
+autoscaling:
+  enabled: true
+  suffix: '-hpa'
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80

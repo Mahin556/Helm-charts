@@ -1,0 +1,16 @@
+{{- if .Values.externalDatabase.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{ .Values.externalDatabase.serviceName }}'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "gowebapp.labels" . | nindent 4 }}
+spec:
+  type: ExternalName
+  externalName: '{{ .Values.externalDatabase.host }}'
+  ports:
+    - name: '{{ .Values.externalDatabase.portName }}'
+      port: {{ .Values.externalDatabase.port }}
+      targetPort: {{ .Values.externalDatabase.port }}
+{{- end }}

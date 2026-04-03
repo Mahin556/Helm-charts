@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: '{{ include "gowebapp.fullname" . }}{{ .Values.tls.issuer.suffix }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  acme:
+    # The ACME server URL
+    server: '{{ .Values.tls.issuer.acme.server }}'
+    # Email address used for ACME registration
+    email: '{{ .Values.tls.issuer.acme.email }}'
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: '{{ include "gowebapp.fullname" . }}{{ .Values.tls.issuer.suffix }}-key'
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    - http01:
+        ingress:
+          class: nginx     

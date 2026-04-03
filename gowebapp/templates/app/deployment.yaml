@@ -1,0 +1,207 @@
+# =============================================================================
+# GoWebApp — Deployment + LoadBalancer Service
+#
+# An initContainer writes the final config.json to a shared emptyDir by:
+#   1. Taking the template from the ConfigMap
+#   2. sed-replacing __MYSQL_APP_PASSWORD__ and __SESSION_SECRET_KEY__
+#      with values from the Secret
+#   3. Writing the result to /app/config/config.json
+#
+# The main container mounts that same emptyDir, so it always reads the
+# real config — no secrets are ever stored in a ConfigMap.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ include "gowebapp.fullname" . }}{{ .Values.deployment.suffix }}'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "gowebapp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "gowebapp.selectorLabels" . | nindent 6 }}
+  # Rolling update — ensures zero downtime deployments
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        {{- include "gowebapp.selectorLabels" . | nindent 8 }}
+        {{- include "gowebapp.labels" . | nindent 8 }}
+    spec:
+      # Pod-level security context to ensure consistent UID
+      securityContext:
+        {{- if .Values.deployment.securityContext.runAsNonRoot }}
+        runAsNonRoot: true
+        {{- end }}
+        {{- if .Values.deployment.securityContext.runAsUser }}
+        runAsUser: {{ .Values.deployment.securityContext.runAsUser }}
+        {{- end }}
+        {{- if .Values.deployment.securityContext.fsGroup }}
+        fsGroup: {{ .Values.deployment.securityContext.fsGroup }}
+        {{- end }}
+        {{- if .Values.deployment.securityContext.runAsGroup }}
+        runAsGroup: {{ .Values.deployment.securityContext.runAsGroup }}
+        {{- end }}
+      # ------------------------------------------------------------------
+      # Init container — builds the final config.json from template + secrets
+      # ------------------------------------------------------------------
+      initContainers:
+        - name: prepare-config
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              sed \
+                -e "s/__MYSQL_APP_PASSWORD__/$(cat /db-app-credentials/password)/g" \
+                -e "s/__SESSION_SECRET_KEY__/$(cat /db-app-credentials/session-secret-key)/g" \
+                -e "s/__DB_USERNAME__/$(cat /db-app-credentials/username)/g" \
+                -e "s/__DB_NAME__/$(cat /db-app-credentials/database)/g" \
+                -e "s/__DB_ENDPOINT__/$(cat /db-endpoint/host)/g" \
+                -e "s/__DB_PORT__/$(cat /db-endpoint/port)/g" \
+                /config-template/config.json.tmpl > /config-out/config.json
+              echo "config.json written:"
+              cat /config-out/config.json
+              # Ensure proper ownership
+              chown 1001:1001 /config-out/config.json
+              chmod 644 /config-out/config.json
+          volumeMounts:
+            - name: config-template
+              mountPath: /config-template
+            - name: config-out
+              mountPath: /config-out
+            - name: db-app-credentials
+              mountPath: /db-app-credentials
+              readOnly: true
+            - name: db-endpoint
+              mountPath: /db-endpoint
+              readOnly: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+
+        - name: mysql-client
+          image: '{{ .Values.initDbJob.image.repository }}:{{ .Values.initDbJob.image.tag }}'
+          imagePullPolicy: '{{ .Values.initDbJob.image.pullPolicy }}'
+          command:
+            - sh
+            - -c
+            - |
+              echo "⏳ Waiting for database to be ready..."
+              # Read root credentials from mounted secrets
+              ROOT_USER=$(cat /db-app-credentials/username)
+              ROOT_PASS=$(cat /db-app-credentials/password)
+              DB_HOST=$(cat /db-endpoint/host)
+              DB_PORT=$(cat /db-endpoint/port)
+              # Read app credentials
+              APP_USER=$(cat /db-app-credentials/username)
+              APP_PASS=$(cat /db-app-credentials/password)
+              APP_DB=$(cat /db-app-credentials/database)
+              # Wait for database to be reachable
+              until mysql \
+                -h "$DB_HOST" \
+                -P "$DB_PORT" \
+                -u "$ROOT_USER" \
+                -p"$ROOT_PASS" \
+                -e "SELECT 1" &>/dev/null; do
+                echo "Waiting for database connection..."
+                sleep 5
+              done
+              echo "✅ Connected to database"
+          volumeMounts:
+            - name: db-app-credentials
+              mountPath: /db-app-credentials
+              readOnly: true
+            - name: db-endpoint
+              mountPath: /db-endpoint
+              readOnly: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+
+      # ------------------------------------------------------------------
+      # Main application container
+      # ------------------------------------------------------------------
+      containers:
+        - name: gowebapp
+          image: '{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}'
+          imagePullPolicy: '{{ .Values.deployment.image.pullPolicy }}'
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+              name: http
+          securityContext:
+            capabilities:
+              drop: ["ALL"]
+              add:
+                - NET_BIND_SERVICE
+            runAsUser: 1001  # This is appuser (non-root)
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            # Final rendered config.json
+            - name: config-out
+              mountPath: /app/config
+              readOnly: true
+          env:
+            {{- range $key, $value := .Values.deployment.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+          resources:
+            requests:
+              memory: '{{ .Values.deployment.resources.requests.memory }}'
+              cpu: '{{ .Values.deployment.resources.requests.cpu }}'
+            limits:
+              memory: '{{ .Values.deployment.resources.limits.memory }}'
+              cpu: '{{ .Values.deployment.resources.limits.cpu }}'
+
+      volumes:
+        - name: config-template
+          configMap:
+            name: '{{ include "gowebapp.fullname" . }}{{ .Values.config.suffix }}'
+            items:
+            - key: config.json.tmpl
+              path: config.json.tmpl
+            defaultMode: {{ .Values.config.mode | default 0644 }}
+        - name: config-out
+          emptyDir: {}
+        - name:  db-app-credentials
+          secret:
+            secretName: '{{ include "gowebapp.fullname" . }}{{ .Values.externalSecrets.secrets.appCredentials.suffix }}'
+            items:
+              {{- range .Values.externalSecrets.secrets.appCredentials.keys }}
+              - key: {{ .secretKey }}
+                path: {{ .secretKey }}
+              {{- end }}  
+            defaultMode: {{ .Values.externalSecrets.filePermissions | default 0644 }}
+        - name: db-endpoint
+          secret:
+            secretName: '{{ include "gowebapp.fullname" . }}{{ .Values.externalSecrets.secrets.dbEndpoint.suffix }}'
+            items:
+              {{- range .Values.externalSecrets.secrets.dbEndpoint.keys }}
+              - key: {{ .secretKey }}
+                path: {{ .secretKey }}
+              {{- end }}
+            defaultMode: {{ .Values.externalSecrets.filePermissions | default 0644 }}

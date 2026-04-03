@@ -1,0 +1,31 @@
+apiVersion: v2
+name: gowebapp
+description: Go Web Application
+type: application
+version: 2.0.0
+appVersion: 2.0.0
+keywords:
+  - go
+  - webapp
+  - mysql
+  - sealed-secrets
+home: https://github.com/mahinraza/gowebapp
+maintainers:
+  - name: Mahin Raza
+    email: mahinraza317@gmail.com
+
+# dependencies:
+#   - name: cert-manager
+#     version: 1.20.0
+#     repository: https://charts.jetstack.io
+#     condition: certManager.enabled
+#     tags:
+#       - cert-manager
+#       - security
+# #   - name: sealed-secrets
+# #     version: 2.5.19
+# #     repository: https://charts.bitnami.com/bitnami
+# #     condition: sealed-secrets.enabled
+# #     tags:
+# #       - security
+# #       - controller

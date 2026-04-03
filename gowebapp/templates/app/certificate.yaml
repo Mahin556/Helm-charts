@@ -1,0 +1,21 @@
+{{- if .Values.tls.enabled }}
+# Let Cert-Manager create the certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: '{{ include "gowebapp.fullname" . }}{{ .Values.tls.suffix }}'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "gowebapp.labels" . | nindent 4 }}
+spec:
+  secretName: '{{ .Values.ingress.tls.secretName }}'
+  duration: {{ .Values.tls.certificate.duration | default "2160h" }}
+  renewBefore: {{ .Values.tls.certificate.renewBefore | default "360h" }}
+  issuerRef:
+    name: '{{ include "gowebapp.fullname" . }}{{ .Values.tls.issuer.suffix }}'
+    kind: '{{ .Values.tls.issuer.kind }}'
+  dnsNames:
+    {{- range .Values.ingress.hosts }}
+    - {{ .host }}
+    {{- end }}
+{{- end }}
