@@ -8,6 +8,7 @@ metadata:
     {{- include "gowebapp.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "{{ .Values.ingress.sslRedirect | default true }}"
+    argocd.argoproj.io/sync-wave: "4"
     nginx.ingress.kubernetes.io/rewrite-target: /
     {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}

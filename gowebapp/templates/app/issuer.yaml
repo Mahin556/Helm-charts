@@ -3,6 +3,8 @@ kind: Issuer
 metadata:
   name: '{{ include "gowebapp.fullname" . }}{{ .Values.tls.issuer.suffix }}'
   namespace: '{{ .Release.Namespace }}'
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   acme:
     # The ACME server URL

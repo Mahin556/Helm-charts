@@ -11,6 +11,8 @@ metadata:
   namespace: '{{ .Release.Namespace }}'
   labels:
     {{- include "gowebapp.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   type: '{{ .Values.service.type }}'
   selector:
