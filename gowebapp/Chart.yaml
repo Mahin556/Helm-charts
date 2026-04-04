@@ -2,8 +2,8 @@ apiVersion: v2
 name: gowebapp
 description: Go Web Application
 type: application
-version: 2.0.0
-appVersion: 2.0.0
+version: 2.0.1
+appVersion: 2.0.1
 keywords:
   - go
   - webapp

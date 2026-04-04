@@ -173,7 +173,7 @@ externalSecrets:
 externalDatabase:
   enabled: true
   serviceName: mysql-external-service
-  host: db-mysql-nyc3-01091-do-user-33721151-0.e.db.ondigitalocean.com
+  host: "_db_endpoint_host_"   # e.g. db-mysql-nyc3-12345-do-user-67890-0.db.ondigitalocean.com
   port: 25060
   portName: mysql
 
