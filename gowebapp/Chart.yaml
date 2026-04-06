@@ -1,6 +1,6 @@
 apiVersion: v2
 name: gowebapp
-description: Go Web Application
+description: Go Web Application with hashicorp vault integration for secrets management
 type: application
 version: 2.0.1
 appVersion: 2.0.1
