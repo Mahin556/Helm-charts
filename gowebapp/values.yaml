@@ -121,10 +121,6 @@ mysql:
 externalSecrets:
   enabled: true
 
-  store:
-    name: vault-gowebapp-store
-    kind: ClusterSecretStore             # ClusterSecretStore | SecretStore
-
   refreshInterval: 1h
   filePermission: "0644"
 
@@ -132,8 +128,10 @@ externalSecrets:
   secrets:
     appCredentials:
       enabled: true
+      storeName: aws-secretsmanager-store
+      storeKind: ClusterSecretStore
       suffix: '-db-app-credentials'
-      vaultPath: 'prod/gowebapp/database/app_cred'
+      vaultPath: 'gowebapp/prod/database/app_cred'
       keys:
         - secretKey: username
           property: username
@@ -146,8 +144,10 @@ externalSecrets:
 
     rootCredentials:
       enabled: true
+      storeName: aws-secretsmanager-store
+      storeKind: ClusterSecretStore
       suffix: '-db-root-credentials'
-      vaultPath: 'prod/do/database/mysql/root_cred'
+      vaultPath: 'rds!db-8405529e-f9c9-4cd8-b976-41e38acbd206'
       keys:
         - secretKey: username
           property: username
@@ -156,8 +156,10 @@ externalSecrets:
 
     dbEndpoint:
       enabled: true
+      storeName: aws-ssm-store
+      storeKind: ClusterSecretStore
       suffix: '-db-endpoint'
-      vaultPath: 'prod/do/database/mysql/endpoint'
+      vaultPath: '/gowebapp/prod/database/host'
       keys:
         - secretKey: host
           property: host
