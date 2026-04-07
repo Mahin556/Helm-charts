@@ -26,7 +26,7 @@ deployment:
   
   image:
     repository: mahinraza556/gowebapp
-    tag: "23628467642"
+    tag: "24071784924"
     pullPolicy: Always
   
   resources:
