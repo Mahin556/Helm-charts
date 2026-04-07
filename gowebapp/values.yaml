@@ -26,7 +26,7 @@ deployment:
   
   image:
     repository: mahinraza556/gowebapp
-    tag: "24070816072"
+    tag: "24071135182"
     pullPolicy: Always
   
   resources:
@@ -67,7 +67,7 @@ initDbJob:
 
   image:
     repository: mysql
-    tag: "24070816072"
+    tag: "24071135182"
     pullPolicy: IfNotPresent
 
   resources:
@@ -89,7 +89,7 @@ mysql:
 
   image:
     repository: mysql
-    tag: "24070816072"
+    tag: "24071135182"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
