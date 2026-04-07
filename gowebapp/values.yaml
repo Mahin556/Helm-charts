@@ -159,12 +159,11 @@ externalSecrets:
       storeName: aws-ssm-store
       storeKind: ClusterSecretStore
       suffix: '-db-endpoint'
-      vaultPath: '/gowebapp/prod/database/host'
       keys:
-        - secretKey: host
-          property: host
-        - secretKey: port
-          property: port
+        - key: /gowebapp/prod/database/host
+          secretKey: host
+        - key: /gowebapp/prod/database/port
+          secretKey: port
 
 
 # =============================================================================

@@ -4,8 +4,8 @@ description: |
   Go web application with HashiCorp Vault integration for secrets management on DigitalOcean Kubernetes.
   Features automated secret rotation, database credential management, and secure API key storage.
 type: application
-version: 3.0.0
-appVersion: 3.0.0
+version: 3.0.1
+appVersion: 3.0.1
 keywords:
   - go
   - webapp
